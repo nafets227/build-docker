@@ -22,7 +22,9 @@ RUN \
 RUN /usr/local/bin/install-plugins.sh \
     durable-task \
     docker-plugin \
+    git \
     jclouds-jenkins \
+    subversion \
     token-macro
 
 
