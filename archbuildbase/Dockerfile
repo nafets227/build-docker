@@ -3,6 +3,8 @@ FROM pritunl/archlinux
 MAINTAINER Stefan Schallenberg aka nafets227 <infos@nafets.de>
 LABEL Description="Build Base container for Arch Linux Builds in Jenkins"
 
+EXPOSE 22
+
 RUN printf '\n\
 [options]\n\
 IgnorePkg=cryptsetup\n\
@@ -36,7 +38,13 @@ RUN \
     useradd -r -d /home/jenkins -u 981 -m -g jenkins jenkins && \
     printf "jenkins\njenkins\n" | passwd jenkins
 
-RUN pacman -S --needed --noconfirm jre8-openjdk openssh && \
+RUN \
+    pacman -S --needed --noconfirm openssh && \
     /usr/bin/ssh-keygen -A
 
-EXPOSE 22
+RUN \
+    pacman -S --needed --noconfirm \
+        git \
+        jre8-openjdk \
+        subversion 
+
