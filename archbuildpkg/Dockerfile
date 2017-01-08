@@ -24,6 +24,13 @@ Include = /etc/pacman.d/mirrorlist\n\
 
 RUN pacman -S --needed --noconfirm binutils make pkg-config gcc fakeroot base-devel sudo
 
+# Remove temporary files to save space
+RUN \
+    paccache -r -k0 && \
+    rm -rf /usr/share/man/* && \
+    rm -rf /tmp/* && \
+    rm -rf /var/tmp/*
+
 RUN printf '\
 jenkins ALL = NOPASSWD: /usr/bin/pacman\n\
 jenkins ALL = NOPASSWD: /usr/local/bin/ref_repo.sh\n\

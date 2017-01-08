@@ -46,5 +46,13 @@ RUN \
     pacman -S --needed --noconfirm \
         git \
         jre8-openjdk \
-        subversion 
+        subversion
+
+# Remove temporary files to save space
+RUN \
+    paccache -r -k0 && \
+    rm -rf /usr/share/man/* && \
+    rm -rf /tmp/* && \
+    rm -rf /var/tmp/*
+
 
