@@ -23,10 +23,10 @@ RUN /usr/local/bin/install-plugins.sh \
     durable-task \
     docker-plugin \
     git \
+    http-post \
     jclouds-jenkins \
     subversion \
     token-macro
-
 
 #COPY plugins.sh /tmp/plugins.sh
 #COPY plugins.txt /tmp/plugins.txt
