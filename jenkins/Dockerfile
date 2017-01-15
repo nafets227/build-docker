@@ -25,8 +25,10 @@ RUN /usr/local/bin/install-plugins.sh \
     git \
     http-post \
     jclouds-jenkins \
+    job-dsl \
     subversion \
-    token-macro
+    token-macro \
+    workflow-aggregator
 
 #COPY plugins.sh /tmp/plugins.sh
 #COPY plugins.txt /tmp/plugins.txt
