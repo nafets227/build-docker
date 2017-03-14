@@ -26,6 +26,7 @@ RUN /usr/local/bin/install-plugins.sh \
     http-post \
     jclouds-jenkins \
     job-dsl \
+    kubernetes \
     subversion \
     token-macro \
     workflow-aggregator
