@@ -38,4 +38,5 @@ jenkins ALL = NOPASSWD: /usr/local/bin/ref_repo.sh\n\
 
 EXPOSE 22
 
+ENTRYPOINT [ "/usr/local/bin/jenkins-slave" ]
 

@@ -55,4 +55,10 @@ RUN \
     rm -rf /tmp/* && \
     rm -rf /var/tmp/*
 
+COPY jenkins-slave /usr/local/bin
+RUN \
+    chown root:users /usr/local/bin/jenkins-slave && \
+    chmod 755 /usr/local/bin/jenkins-slave
+
+ENTRYPOINT /usr/local/bin/jenkins-slave
 
