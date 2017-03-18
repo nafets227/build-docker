@@ -5,7 +5,6 @@ LABEL Description="Build container for Arch Packages in Jenkins"
 
 COPY infos_nafets.de.gpgpub /root/infos_nafets.de.gpgpub
 
-
 # @TODO: find a way to handle the nafets pacman repository, that is only available
 #        to our intranet and not in the public internet.
 RUN printf '\n\
@@ -35,8 +34,4 @@ RUN printf '\
 jenkins ALL = NOPASSWD: /usr/bin/pacman\n\
 jenkins ALL = NOPASSWD: /usr/local/bin/ref_repo.sh\n\
 ' >/etc/sudoers.d/nafetsde-aur
-
-EXPOSE 22
-
-ENTRYPOINT [ "/usr/local/bin/jenkins-slave" ]
 

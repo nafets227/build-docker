@@ -68,17 +68,22 @@ else
 	if [ -z "$HOME" ] ; then
 		echo "Error: No HOME. Please set \$HOME."
 		exit 1
-	elif [ ! -d "$HOME" ] || [ ! -w "$HOME" ] ; then
-		echo "Error: HOME $HOME is no directory or not writable."
+	elif [ ! -d "$HOME/workspace" ] || [ ! -w "$HOME/workspace" ] ; then
+		echo "Error: HOME-workspace $HOME/workspace is no directory or not writable."
 		exit 1
-	elif [ -f $HOME/slave.jar ] ; then
-		echo "Updating $HOME/slave.jar from $JENKINS_URL/jnlpJars/slave.jar"
-		curl -L -o $HOME/slave.jar -z $HOME/slave.jar $JENKINS_URL/jnlpJars/slave.jar
+	elif [ -f $HOME/workspace/slave.jar ] ; then
+		echo "Updating $HOME/workspace/slave.jar from $JENKINS_URL/jnlpJars/slave.jar"
+		curl -L -o $HOME/workspace/slave.jar -z $HOME/workspace/slave.jar $JENKINS_URL/jnlpJars/slave.jar
 	else
-		echo "Downloading $HOME/slave.jar from $JENKINS_URL/jnlpJars/slave.jar"
-		curl -L -o $HOME/slave.jar $JENKINS_URL/jnlpJars/slave.jar
+		echo "Downloading $HOME/workspace/slave.jar from $JENKINS_URL/jnlpJars/slave.jar"
+		curl -L -o $HOME/workspace/slave.jar $JENKINS_URL/jnlpJars/slave.jar
 	fi
 
-	exec java $JAVA_OPTS $JNLP_PROTOCOL_OPTS -cp $HOME/slave.jar hudson.remoting.jnlp.Main -headless $TUNNEL $URL "$@"
+	chown jenkins:jenkins $HOME $HOME/.owner 
+	chown -R jenkins:jenkins $HOME/workspace
+
+	exec sudo -u jenkins java $JAVA_OPTS $JNLP_PROTOCOL_OPTS \
+		-cp $HOME/workspace/slave.jar \
+		hudson.remoting.jnlp.Main -headless $TUNNEL $URL "$@"
 
 fi
