@@ -79,8 +79,13 @@ else
 		curl -L -o $HOME/workspace/slave.jar $JENKINS_URL/jnlpJars/slave.jar
 	fi
 
+	echo "Assuring correct access rights in $HOME/workspace"
 	chown jenkins:jenkins $HOME $HOME/.owner 
-	chown -R jenkins:jenkins $HOME/workspace
+#	chown -R jenkins:jenkins $HOME/workspace
+	find $HOME/workspace -! -user jenkins -exec chown jenkins {} ";"
+	find $HOME/workspace -! -group jenkins -exec chown :jenkins {} ";"
+
+	echo "Starting Jenkins slave"
 
 	exec sudo -u jenkins java $JAVA_OPTS $JNLP_PROTOCOL_OPTS \
 		-cp $HOME/workspace/slave.jar \
