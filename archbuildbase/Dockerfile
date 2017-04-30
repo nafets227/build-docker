@@ -39,17 +39,13 @@ RUN \
     printf "jenkins\njenkins\n" | passwd jenkins
 
 RUN \
-    pacman -S --needed --noconfirm openssh && \
-    /usr/bin/ssh-keygen -A
-
-RUN \
+    pacman -S --needed --noconfirm \
+    	openssh && \
+    /usr/bin/ssh-keygen -A && \
     pacman -S --needed --noconfirm \
         git \
         jre8-openjdk \
-        subversion
-
-# Remove temporary files to save space
-RUN \
+        subversion && \
     paccache -r -k0 && \
     rm -rf /usr/share/man/* && \
     rm -rf /tmp/* && \
