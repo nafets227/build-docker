@@ -1,0 +1,69 @@
+#!/bin/bash
+#
+# Start script for container archbuildpkg
+#
+# (C) 2017 Stefan Schallenberg
+#
+
+##### Configure Additional Mirrors ###########################################
+# Usage Example:
+# PACMAN_MIRRORLIST="http://myserver/$arch/$os\nhttp://myserver2/mydir/$arch/pkg/$os"
+if [ ! -z "$PACMAN_MIRRORLIST" ] ; then
+	mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
+	printf "$PACMAN_MIRRORLIST" >/etc/pacman.d/mirrorlist
+	cat /etc/pacman.d/mirrorlist.bak >>/etc/pacman.d/mirrorlist
+	printf "Added PACMAN Mirrorlist [ %s ]\n" "$PACMAN_MIRRORLIST"
+fi
+
+##### Configure additional SSL CAś ###########################################
+# Usage Example:
+# SSL_CAFILE="/config/myCa.pem"
+new_sslca_installed=0
+for c in $SSL_CAFILE ; do
+	install -m 644 $c /etc/ca-certificates/trust-source/anchors/
+	new_sslca_installed=1
+	printf "added SSL-CA %s\n" "$k"
+done
+if [ "$new_sslca_installed" -ne 0 ] ; then
+	trust extract-compat
+	printf "updated SSL-CA cache\n"
+fi
+
+##### Configure additional GPG Keys ########################################## 
+# Usage Example:
+# PACMAN_KEY="/config/mygpgpubkey.gpg /config/mykey2.gpg"
+for k in $PACMAN_KEY ; do
+    pacman-key -a $k
+    pacman-key --lsign $(gpg  <$k | sed -n "s:^      ::p")
+    printf "Added PACMAN Key %s\n" "$k"
+done
+
+##### Configure additional Repositories for PACMAN ###########################
+# Usage Example:
+# PACMAN_REPO="myrepo1 myrepo2
+# PACMAN_REPO_MYREPO2="Server = myserver\nSigLevel = optional"
+# NB: PACMAN_REPO_MYREPO1 is not set, then the default ist used (use mirrorlist)
+for r in $PACMAN_REPO ; do
+	eval OPT=\$PACMAN_REPO_${r^^}
+	if [ -z "$OPT" ] ; then
+		OPT="Include = /etc/pacman.d/mirrorlist"
+	fi
+	printf "[%s]\n" "$r" >>/etc/pacman.conf
+	printf "$OPT" >>/etc/pacman.conf
+	printf "\n\n" >>/etc/pacman.conf
+	printf "Added PACMAN Repository %s [%s]\n" "$r" "$OPT"
+done
+ 
+pacman_out=$(pacman -Sy 2>&1)
+rc=$?
+printf "%s\n" "$pacman_out"
+if [ "$rc" -ne 0 ] || [[ "$pacman_out" =~ "error:" ]] ; then
+	printf "%s %s %s\n" \
+		"Could not update PACMAN repository cache." \
+		"Probably Config error." \
+		"Aborting."
+	exit 1
+fi
+
+# finally call script from archbuildbase
+. /usr/local/bin/jenkins-slave "$@"
