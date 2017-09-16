@@ -44,7 +44,8 @@ RUN \
     /usr/bin/ssh-keygen -A && \
     pacman -S --needed --noconfirm \
         git \
-        jre8-openjdk \
+        jre8-openjdk && \
+    pacman -S --needed --noconfirm --nodeps \
         subversion && \
     paccache -r -k0 && \
     rm -rf /usr/share/man/* && \
