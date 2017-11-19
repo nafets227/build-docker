@@ -9,8 +9,6 @@ RUN printf '\n\
 [options]\n\
 IgnorePkg=cryptsetup\n\
 IgnorePkg=device-mapper\n\
-IgnorePkg=cryptsetup\n\ 
-IgnorePkg=device-mapper\n\
 IgnorePkg=dhcpcd\n\
 IgnorePkg=iproute2\n\
 IgnorePkg=jfsutils\n\
@@ -23,9 +21,10 @@ IgnorePkg=nano\n\
 IgnorePkg=netctl\n\
 IgnorePkg=openresolv\n\
 IgnorePkg=pciutils\n\
-IgnorePkg=pcmciautils, \
+IgnorePkg=pcmciautils\n\
 IgnorePkg=reiserfsprogs\n\
 IgnorePkg=s-nail\n\
+IgnorePkg=systemd\n\
 IgnorePkg=systemd-sysvcompat\n\
 IgnorePkg=usbutils\n\
 IgnorePkg=vi\n\
@@ -39,14 +38,14 @@ RUN \
     printf "jenkins\njenkins\n" | passwd jenkins
 
 RUN \
+    pacman -S --needed --noconfirm --nodeps --nodeps \
+        subversion && \
     pacman -S --needed --noconfirm \
     	openssh && \
     /usr/bin/ssh-keygen -A && \
     pacman -S --needed --noconfirm \
         git \
         jre8-openjdk && \
-    pacman -S --needed --noconfirm --nodeps \
-        subversion && \
     paccache -r -k0 && \
     rm -rf /usr/share/man/* && \
     rm -rf /tmp/* && \
