@@ -24,7 +24,6 @@ IgnorePkg=pciutils\n\
 IgnorePkg=pcmciautils\n\
 IgnorePkg=reiserfsprogs\n\
 IgnorePkg=s-nail\n\
-IgnorePkg=systemd\n\
 IgnorePkg=systemd-sysvcompat\n\
 IgnorePkg=usbutils\n\
 IgnorePkg=vi\n\
@@ -49,7 +48,8 @@ RUN \
     paccache -r -k0 && \
     rm -rf /usr/share/man/* && \
     rm -rf /tmp/* && \
-    rm -rf /var/tmp/*
+    rm -rf /var/tmp/* && \
+    /bin/true
 
 COPY jenkins-slave /usr/local/bin
 RUN \
