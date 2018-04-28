@@ -29,5 +29,7 @@ RUN /usr/local/bin/install-plugins.sh \
 #RUN \
 #    /tmp/plugins.sh /tmp/plugins.txt; \
 #    rm /tmp/plugins.sh /tmp/plugins.txt
+
+COPY executors.groovy /usr/share/jenkins/ref/init.groovy.d/executors.groovy
     
 USER ${user}
