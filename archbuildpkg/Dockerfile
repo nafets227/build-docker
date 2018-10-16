@@ -16,7 +16,7 @@ RUN \
         $(pacman -S -g base-devel \
         	| sed -e 's/^base-devel //' -e 's/^systemd$//') \
         binutils make pkg-config gcc fakeroot sudo && \
-    paccache -r -k0 && \
+    rm -rf /var/cache/pacman/pkg/* && \
     rm -rf /usr/share/man/* && \
     rm -rf /tmp/* && \
     rm -rf /var/tmp/*

@@ -1,55 +1,32 @@
-FROM pritunl/archlinux
+FROM archimg/base
 
 MAINTAINER Stefan Schallenberg aka nafets227 <infos@nafets.de>
 LABEL Description="Build Base container for Arch Linux Builds in Jenkins"
 
 EXPOSE 22
 
-# RUN printf '\n\
-# [options]\n\
-# IgnorePkg=cryptsetup\n\
-# IgnorePkg=device-mapper\n\
-# IgnorePkg=dhcpcd\n\
-# IgnorePkg=iproute2\n\
-# IgnorePkg=jfsutils\n\
-# IgnorePkg=linux\n\
-# IgnorePkg=lvm2\n\
-# IgnorePkg=man-db\n\
-# IgnorePkg=man-pages\n\ 
-# IgnorePkg=mdadm\n\
-# IgnorePkg=nano\n\
-# IgnorePkg=netctl\n\
-# IgnorePkg=openresolv\n\
-# IgnorePkg=pciutils\n\
-# IgnorePkg=pcmciautils\n\
-# IgnorePkg=reiserfsprogs\n\
-# IgnorePkg=s-nail\n\
-# IgnorePkg=systemd-sysvcompat\n\
-# IgnorePkg=usbutils\n\
-# IgnorePkg=vi\n\
-# IgnorePkg=xfsprogs\n\
-# ' \
-# >> /etc/pacman.conf && pacman -Sy
-
 RUN \
-    groupadd -r jenkins -g 981 && \
-    useradd -r -d /home/jenkins -u 981 -m -g jenkins jenkins && \
+    groupadd -r jenkins -g 900 && \
+    useradd -r -d /home/jenkins -u 900 -m -g jenkins jenkins && \
     printf "jenkins\njenkins\n" | passwd jenkins
 
 RUN \
+    pacman -Sy && \
     pacman -S --needed --noconfirm \
-        subversion && \
-    pacman -S --needed --noconfirm \
+        subversion \
     	openssh && \
     /usr/bin/ssh-keygen -A && \
     pacman -S --needed --noconfirm \
         git \
         jre8-openjdk && \
-    paccache -r -k0 && \
-    rm -rf /usr/share/man/* && \
-    rm -rf /tmp/* && \
-    rm -rf /var/tmp/*
-
+    rm -rf \
+      /var/tmp/* \
+      /usr/share/man/* \
+      /var/cache/pacman/pkg/* \
+      /var/lib/pacman/sync/* \
+      /README \
+      /etc/pacman.d/mirrorlist.pacnew    
+    
 COPY jenkins-slave /usr/local/bin
 RUN \
     chown root:users /usr/local/bin/jenkins-slave && \
