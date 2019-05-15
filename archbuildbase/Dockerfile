@@ -1,4 +1,4 @@
-FROM archimg/base
+FROM archlinux/base
 
 MAINTAINER Stefan Schallenberg aka nafets227 <infos@nafets.de>
 LABEL Description="Build Base container for Arch Linux Builds in Jenkins"
@@ -11,7 +11,7 @@ RUN \
     printf "jenkins\njenkins\n" | passwd jenkins
 
 RUN \
-    pacman -Sy && \
+    pacman -Suy --noconfirm && \
     pacman -S --needed --noconfirm \
         subversion \
     	openssh && \
