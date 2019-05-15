@@ -18,7 +18,7 @@ RUN \
     /usr/bin/ssh-keygen -A && \
     pacman -S --needed --noconfirm \
         git \
-        jre8-openjdk && \
+        jre-openjdk && \
     rm -rf \
       /var/tmp/* \
       /usr/share/man/* \
