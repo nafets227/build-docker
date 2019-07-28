@@ -11,6 +11,9 @@ function build_local () {
 	rc=$?; if [ $rc -ne 0 ]; then return $rc ; fi
 }
 
+# pull Base Image to be sure we use the latest version
+docker pull archlinux/base
+
 if [ $# -eq 0 ] ; then
 	for f in $(ls); do
 		if [ -d $f ] ; then
@@ -30,4 +33,3 @@ else
 		fi
 	done
 fi
-
