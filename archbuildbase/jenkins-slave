@@ -31,6 +31,9 @@
 # * JENKINS_URL : alternate jenkins URL
 # * JENKINS_SECRET : agent secret, if not set as an argument
 # * JENKINS_AGENT_NAME : agent name, if not set as an argument
+# * JENKINS_USER : username, defaults to "jenkins"
+# * JENKINS_HOME: home-directory to use, defaults to /home/${JENKINS_USER}
+# * CURL_OPT: Curl options for downloading jenkins-slave.jar. Commonly used is "-k" to accept not-trusted https certificates 
 
 if [ $# -eq 1 ]; then
 
@@ -50,10 +53,13 @@ else
 
 	if [ -n "$JENKINS_URL" ]; then
 		URL="-url $JENKINS_URL"
-        elif [[ "$@" == *"--url"* ]] ; then
+		echo "Debug: Using URL from JENKINS_URL ($JENKINS_URL)" 
+	elif [[ "$@" == *"--url"* ]] ; then
 		# identify real Jenkins URL in order to download latest slave
 		URL=${@#*"--url"}
 		JENKINS_URL=${URL%%" "*}
+		URL="-url $JENKINS_URL"
+		echo "Debug: Using URL from parm --url ($JENKINS_URL)"
 	else
 		echo "Error: No Jenkins URL. Either specify --url or set \$JENKINS_URL."
 		exit 1
@@ -64,31 +70,38 @@ else
 		JNLP_PROTOCOL_OPTS="-Dorg.jenkinsci.remoting.engine.JnlpProtocol3.disabled=true"
 	fi
 
+	JENKINS_USER=${JENKINS_USER:-jenkins}
+	JENKINS_HOME=${JENKINS_HOME:-/home/$JENKINS_USER}
 
-	if [ -z "$HOME" ] ; then
-		echo "Error: No HOME. Please set \$HOME."
+	if [ ! -d "$JENKINS_HOME/workspace" ] || [ ! -w "$JENKINS_HOME/workspace" ] ; then
+		echo "Error: HOME-workspace $JENKINS_HOME/workspace is no directory or not writable."
 		exit 1
-	elif [ ! -d "$HOME/workspace" ] || [ ! -w "$HOME/workspace" ] ; then
-		echo "Error: HOME-workspace $HOME/workspace is no directory or not writable."
-		exit 1
-	elif [ -f $HOME/workspace/slave.jar ] ; then
-		echo "Updating $HOME/workspace/slave.jar from $JENKINS_URL/jnlpJars/slave.jar"
-		curl -L -o $HOME/workspace/slave.jar -z $HOME/workspace/slave.jar $JENKINS_URL/jnlpJars/slave.jar
+	elif [ -f $JENKINS_HOME/workspace/slave.jar ] ; then
+		echo "Updating $JENKINS_HOME/workspace/slave.jar from $JENKINS_URL/jnlpJars/slave.jar"
+		curl $CURL_OPT -L -o $JENKINS_HOME/workspace/slave.jar -z $JENKINS_HOME/workspace/slave.jar $JENKINS_URL/jnlpJars/slave.jar
+		if [ $? -ne 0 ] ; then
+			echo "Updating $JENKINS_HOME/workspace/slave.jar failed."
+			exit 1
+		fi
 	else
-		echo "Downloading $HOME/workspace/slave.jar from $JENKINS_URL/jnlpJars/slave.jar"
-		curl -L -o $HOME/workspace/slave.jar $JENKINS_URL/jnlpJars/slave.jar
+		echo "Downloading $JENKINS_HOME/workspace/slave.jar from $JENKINS_URL/jnlpJars/slave.jar"
+		curl $CURL_OPT -L -o $JENKINS_HOME/workspace/slave.jar $JENKINS_URL/jnlpJars/slave.jar
+		if [ $? -ne 0 ] ; then
+			echo "Downloading $JENKINS_HOME/workspace/slave.jar failed."
+			exit 1
+		fi
 	fi
 
-	echo "Assuring correct access rights in $HOME/workspace"
-	chown jenkins:jenkins $HOME $HOME/.owner 
+	echo "Assuring correct access rights in $JENKINS_HOME/workspace"
+	chown jenkins:jenkins $JENKINS_HOME $JENKINS_HOME/.owner 
 #	chown -R jenkins:jenkins $HOME/workspace
-	find $HOME/workspace -! -user jenkins -exec chown jenkins {} ";"
-	find $HOME/workspace -! -group jenkins -exec chown :jenkins {} ";"
+	find $JENKINS_HOME/workspace -! -user jenkins -exec chown jenkins {} ";"
+	find $JENKINS_HOME/workspace -! -group jenkins -exec chown :jenkins {} ";"
 
-	echo "Starting Jenkins slave"
+	echo "Starting Jenkins slave as User $JENKINS_USER at $JENKINS_HOME"
 
-	exec sudo -u jenkins java $JAVA_OPTS $JNLP_PROTOCOL_OPTS \
-		-cp $HOME/workspace/slave.jar \
+	exec sudo -u $JENKINS_USER -- java $JAVA_OPTS $JNLP_PROTOCOL_OPTS \
+		-cp $JENKINS_HOME/workspace/slave.jar \
 		hudson.remoting.jnlp.Main -headless $TUNNEL $URL "$@"
 
 fi

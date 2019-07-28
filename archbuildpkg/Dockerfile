@@ -14,8 +14,8 @@ Include = /etc/pacman.d/mirrorlist\n\
 RUN \
     pacman -S --needed --noconfirm \
         $(pacman -S -g base-devel \
-        	| sed -e 's/^base-devel //' -e 's/^systemd$//') \
-        binutils make pkg-config gcc fakeroot sudo && \
+            | sed -e 's/^base-devel //') \
+        binutils make pkg-config gcc fakeroot && \
     rm -rf /var/cache/pacman/pkg/* && \
     rm -rf /usr/share/man/* && \
     rm -rf /tmp/* && \
