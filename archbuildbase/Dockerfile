@@ -12,9 +12,7 @@ RUN \
 
 RUN \
     pacman -Suy --noconfirm && \
-    pacman -S --needed --noconfirm \
-        subversion \
-    	openssh && \
+    pacman -S --needed --noconfirm openssh && \
     /usr/bin/ssh-keygen -A && \
     pacman -S --needed --noconfirm \
         git \
