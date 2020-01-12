@@ -12,10 +12,7 @@ Include = /etc/pacman.d/mirrorlist\n\
     pacman -Sy
 
 RUN \
-    pacman -S --needed --noconfirm \
-        $(pacman -S -g base-devel \
-            | sed -e 's/^base-devel //') \
-        binutils make pkg-config gcc fakeroot && \
+    pacman -S --needed --noconfirm base-devel intltool && \
     rm -rf /var/cache/pacman/pkg/* && \
     rm -rf /usr/share/man/* && \
     rm -rf /tmp/* && \
