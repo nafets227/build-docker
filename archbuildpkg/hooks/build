@@ -1,0 +1,7 @@
+#!/bin/bash
+echo "Starting nafets227/build-docker Build Hook in $PWD"
+set -x
+docker build \
+	-t $IMAGE_NAME \
+	--build-arg DOCKER_TAG=$DOCKER_TAG \
+	.

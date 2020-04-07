@@ -7,12 +7,12 @@
 
 function build_local () {
 	printf "Building %s ... \n" "$f"
-	docker build -t nafets227/$f $f
+	docker build -t nafets227/$f:local --build-arg DOCKER_TAG=local $f
 	rc=$?; if [ $rc -ne 0 ]; then return $rc ; fi
 }
 
 # pull Base Image to be sure we use the latest version
-docker pull archlinux/base
+docker pull archlinux/base:latest
 
 if [ $# -eq 0 ] ; then
 	for f in $(ls); do

@@ -1,4 +1,5 @@
-FROM nafets227/archbuildbase
+ARG DOCKER_TAG
+FROM nafets227/archbuildbase:$DOCKER_TAG
 
 MAINTAINER Stefan Schallenberg aka nafets227 <infos@nafets.de>
 LABEL Description="Build container for Arch Packages in Jenkins"
