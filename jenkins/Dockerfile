@@ -26,6 +26,9 @@ RUN /usr/local/bin/install-plugins.sh \
     token-macro \
     workflow-aggregator
 
-COPY executors.groovy /usr/share/jenkins/ref/init.groovy.d/executors.groovy
-    
+COPY executors.groovy \
+	/usr/share/jenkins/ref/init.groovy.d/executors.groovy.override
+COPY kubecloud.groovy \
+	/usr/share/jenkins/ref/init.groovy.d/kubecloud.groovy.override
+
 USER ${user}
