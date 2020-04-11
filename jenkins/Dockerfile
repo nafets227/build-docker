@@ -1,6 +1,10 @@
 FROM jenkins/jenkins:lts
 MAINTAINER Stefan Schallenberg <infos (at) nafets.de>
 LABEL Description="Jenkins with Docker client and plugin installed"
+ARG DOCKER_TAG=latest
+
+ENV ARCHBUILDIMG=nafets227/archbuildpkg:$DOCKER_TAG
+RUN echo "Info: Default ArchBuildImg=$ARCHBUILDIMG"
 
 USER root
 # Install Docker Engine for Debian
@@ -30,5 +34,6 @@ COPY executors.groovy \
 	/usr/share/jenkins/ref/init.groovy.d/executors.groovy.override
 COPY kubecloud.groovy \
 	/usr/share/jenkins/ref/init.groovy.d/kubecloud.groovy.override
+
 
 USER ${user}
