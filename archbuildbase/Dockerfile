@@ -29,7 +29,9 @@ RUN \
 COPY jenkins-slave /usr/local/bin
 RUN \
     chown root:users /usr/local/bin/jenkins-slave && \
-    chmod 755 /usr/local/bin/jenkins-slave
+    chmod 755 /usr/local/bin/jenkins-slave && \
+    mkdir /home/jenkins/workspace && \
+    chown jenkins:jenkins /home/jenkins/workspace
 
 ENTRYPOINT [ "/usr/local/bin/jenkins-slave" ]
 
