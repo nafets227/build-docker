@@ -34,6 +34,7 @@ COPY executors.groovy \
 	/usr/share/jenkins/ref/init.groovy.d/executors.groovy.override
 COPY kubecloud.groovy \
 	/usr/share/jenkins/ref/init.groovy.d/kubecloud.groovy.override
-
+COPY jenkinsweburl.groovy \
+	/usr/share/jenkins/ref/init.groovy.d/jenkinsweburl.groovy.override
 
 USER ${user}
