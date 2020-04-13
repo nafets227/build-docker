@@ -12,14 +12,14 @@ def kc
 try {
 	img=System.getenv("ARCHBUILDIMG")
 	if (!img || img == "") {
-		println "Error: EnvVar ARCHBUILDIMG is not set."
+		println "Error: ARCHBUILDIMG is not set."
 		throw new Exception("ARCHBUILDIMG not set")
 	}
 
 	ns=System.getenv("NAMESPACE")
 	if (!ns || ns == "") {
-		println "Error: ARCHBUILDIMG is not set."
-		throw new Exception("ARCHBUILDIMG not set")
+		println "Error: NAMESPACE is not set."
+		throw new Exception("NAMESPACE not set")
 	}
 
 	nsbuild=System.getenv("NAMESPACEBUILD")
