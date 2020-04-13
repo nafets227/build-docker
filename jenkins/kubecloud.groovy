@@ -28,10 +28,10 @@ try {
 		println "NAMESPACEBUILD not set. Using Default ${nsbuild}"
 	}
 
-	jenkinsurl=System.getenv("JENKINSURL")
+	jenkinsurl=System.getenv("JENKINSBUILDURL")
 	if (!jenkinsurl || jenkinsurl == "") {
 		jenkinsurl="http://jenkins.${ns}.svc.cluster.local:8080"
-		println "JENKINSURL not set. Using Default ${jenkinsurl}"
+		println "JENKINSBUILDURL not set. Using Default ${jenkinsurl}"
 	}
 
 	println "Configuring Jenkins Cloud '${CLOUD}'"
