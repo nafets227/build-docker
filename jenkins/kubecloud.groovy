@@ -35,42 +35,6 @@ try {
 	}
 
 	println "Configuring Jenkins Cloud '${CLOUD}'"
-	if (Jenkins.instance.clouds) {
-		Jenkins.instance.clouds.each { cloud ->
-			if (cloud.name == CLOUD) {
-				kc = cloud
-        			println "Updating existing cloud ${cloud.name}"
-			} else 
-				println "Ignoring existing cloud ${cloud.name}"
-		}
-	}
-	if (!kc) {
-		kc = new KubernetesCloud(CLOUD)
-		Jenkins.instance.clouds.add(kc)
-		println "added cloud ${Jenkins.instance.clouds}"
-	}
- 
-	kc.setServerUrl("https://kubernetes.default.svc.cluster.local/")
-	kc.setNamespace(nsbuild)
-	kc.setJenkinsUrl(jenkinsurl)
-	kc.setMaxRequestsPerHostStr("")
-	// kc.setContainerCapStr(conf.kubernetes.containerCapStr)
-	// kc.setSkipTlsVerify(false)
-	// kc.setCredentialsId(conf.kubernetes.credentialsId)
-	// kc.setConnectTimeout(conf.kubernetes.connectTimeout)
-	// kc.setReadTimeout(conf.kubernetes.readTimeout)
- 
-	def pt
-	if (kc.templates) {
-		kc.templates.each { podTempl ->
-			if (podTempl.name == BUILD) {
-				println "deleting existing podTemplate ${podTempl.name}"
-				kc.templates.remove(podTempl)
-			} else
-				println "Ignoring existing podTemplate ${podTempl.name}"
-		}
-	}
-
 
 	pt = new PodTemplate()
 	pt.setName(BUILD)
@@ -102,8 +66,50 @@ try {
 	ct.setArgs("\${computer.jnlpmac} \${computer.name}")
 	pt.setContainers([ct])
 
+	if (Jenkins.instance.clouds) {
+		Jenkins.instance.clouds.each { cloud ->
+			if (cloud.name == CLOUD) {
+				kc = cloud
+				fAdd = false
+        			println "Updating existing cloud ${cloud.name}"
+			} else 
+				println "Ignoring existing cloud ${cloud.name}"
+		}
+	}
+	if (!kc) {
+		kc = new KubernetesCloud(CLOUD)
+		fAdd = true
+		println "created cloud ${Jenkins.instance.clouds}"
+	}
+ 
+	kc.setServerUrl("https://kubernetes.default.svc.cluster.local/")
+	kc.setNamespace(nsbuild)
+	kc.setJenkinsUrl(jenkinsurl)
+	kc.setMaxRequestsPerHostStr("")
+	// kc.setContainerCapStr(conf.kubernetes.containerCapStr)
+	// kc.setSkipTlsVerify(false)
+	// kc.setCredentialsId(conf.kubernetes.credentialsId)
+	// kc.setConnectTimeout(conf.kubernetes.connectTimeout)
+	// kc.setReadTimeout(conf.kubernetes.readTimeout)
+ 
+	def pt
+	if (kc.templates) {
+		kc.templates.each { podTempl ->
+			if (podTempl.name == BUILD) {
+				println "deleting existing podTemplate ${podTempl.name}"
+				kc.templates.remove(podTempl)
+			} else
+				println "Ignoring existing podTemplate ${podTempl.name}"
+		}
+	}
+
 	println "adding PodTemplate ${pt.name}"
 	kc.templates << pt
+
+	if (fAdd == true) {
+		println "Adding Cloud."
+		Jenkins.instance.clouds.add(kc)
+		}
 
 	kc = null
 	println "Configuring k8s completed"
