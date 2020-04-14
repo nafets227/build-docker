@@ -124,6 +124,18 @@ In order to persist the Jenkins data simply mount a persistent storage to
 	  name: jenkins
 	---
 	apiVersion: rbac.authorization.k8s.io/v1
+	kind: Role
+	metadata:
+	  name: buildadmin
+	rules:
+	- apiGroups: [""] # "" indicates the core API group
+	  resources: ["pods", "pods/log"]
+	  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+	- apiGroups: [""] # "" indicates the core API group
+	  resources: ["events"]
+	  verbs: ["get", "list", "watch"]
+	---
+	apiVersion: rbac.authorization.k8s.io/v1
 	kind: RoleBinding
 	metadata:
 	  name: jenkins-buildadmin
