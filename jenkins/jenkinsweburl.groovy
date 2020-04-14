@@ -3,12 +3,12 @@
 import jenkins.model.Jenkins
 import jenkins.model.JenkinsLocationConfiguration
 
-jenkinsweburl=System.getenv("JENKINSWEBURL")
-if (!jenkinsweburl || jenkinsweburl == "") {
+myurl=System.getenv("JENKINSWEBURL")
+if (!myurl || myurl == "") {
 	println "JENKINSWEBURL not set. Skipping."
 } else {
 	def jenkinsLocationConfiguration = JenkinsLocationConfiguration.get()
-	jenkinsLocationConfiguration.setUrl(jenkinsweburl)
+	jenkinsLocationConfiguration.setUrl(myurl)
 	// jenkinsLocationConfiguration.setAdminAddress(jenkinsParameters.email)
 	jenkinsLocationConfiguration.save()
 }
