@@ -9,6 +9,7 @@ import org.csanchez.jenkins.plugins.kubernetes.volumes.workspace.EmptyDirWorkspa
 final BUILD = "archbuildpkg"
 final CLOUD = "Local Kubernetes Cluster"
 def kc
+def pt
 try {
 	img=System.getenv("ARCHBUILDIMG")
 	if (!img || img == "") {
@@ -92,7 +93,6 @@ try {
 	// kc.setConnectTimeout(conf.kubernetes.connectTimeout)
 	// kc.setReadTimeout(conf.kubernetes.readTimeout)
  
-	def pt
 	if (kc.templates) {
 		kc.templates.each { podTempl ->
 			if (podTempl.name == BUILD) {
