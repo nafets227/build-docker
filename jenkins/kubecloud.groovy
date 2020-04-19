@@ -8,8 +8,9 @@ import org.csanchez.jenkins.plugins.kubernetes.volumes.workspace.EmptyDirWorkspa
  
 final BUILD = "archbuildpkg"
 final CLOUD = "Local Kubernetes Cluster"
-def kc
-def pt
+KubernetesCloud kc = null
+PodTemplate pt = null
+ContainerTemplate ct = null
 try {
 	img=System.getenv("ARCHBUILDIMG")
 	if (!img || img == "") {
@@ -57,7 +58,7 @@ try {
 	pt.setVolumes(volumes)
 	*/
 
-	ContainerTemplate ct = new ContainerTemplate("jnlp", img)
+	ct = new ContainerTemplate("jnlp", img)
 
 	ct.setAlwaysPullImage(true)
 	// ct.setPrivileged(podTemplateConfig.containerTemplate.privileged ?: conf.kubernetes.containerTemplateDefaults.privileged)
@@ -109,13 +110,17 @@ try {
 	if (fAdd == true) {
 		println "Adding Cloud."
 		Jenkins.instance.clouds.add(kc)
-		}
+	}
 
 	kc = null
+	pt = null
+	ct = null
 	println "Configuring Jenkins Cloud '${CLOUD}' completed"
 }
 finally {
 	// if we don't null kc, jenkins will try to serialise k8s objects
 	//  and that will fail, so we won't see actual error
 	kc = null
+	pt = null
+	ct = null
 }
