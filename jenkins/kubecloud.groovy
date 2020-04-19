@@ -112,7 +112,7 @@ try {
 		}
 
 	kc = null
-	println "Configuring k8s completed"
+	println "Configuring Jenkins Cloud '${CLOUD}' completed"
 }
 finally {
 	// if we don't null kc, jenkins will try to serialise k8s objects
