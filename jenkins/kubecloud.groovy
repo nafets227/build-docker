@@ -97,10 +97,15 @@ try {
 	if (kc.templates) {
 		kc.templates.each { podTempl ->
 			if (podTempl.name == BUILD) {
-				println "deleting existing podTemplate ${podTempl.name}"
-				kc.templates.remove(podTempl)
+				// remove the PodTemplate outside the
+				// each-loop to avoid Concurrency exception
+				pt = podTempl
 			} else
 				println "Ignoring existing podTemplate ${podTempl.name}"
+		}
+		if ( pt ) {
+			println "deleting existing podTemplate ${BUILD}"
+			kc.templates.remove(pt)
 		}
 	}
 
