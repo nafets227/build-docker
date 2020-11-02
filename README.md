@@ -1,4 +1,4 @@
-#build-docker
+# build-docker
 Build Arch Linux packages in containers using Jenking
 
 Build 
@@ -7,13 +7,13 @@ packages from
 [AUR](https://aur.archlinux.org) fully automated, triggered by each commit
  and push it to a local ArchLinux Repo. Run in Kubernetes
 
-##Usage
+## Usage
 Create a Kubernetes Deployment for Jenkins and make the Web-Interface 
 available to outside the cluster. See below for a fully running Example of
 Kubernetes yaml files
 
 
-##Environment Variables in Jenkins container
+## Environment Variables in Jenkins container
 - JENKINSWEBURL: URL where Jenkins Web-UI is accessible from users, e.g. 
 https://jenkins.myintranet.example.com
 - JENKINSBUILDURL URL of Jenkins for Build nodes, defaults to
@@ -29,11 +29,11 @@ Mandatory, suggest to use the downword API of Kubernetes (see example)
 - NAMESPACEBUILD: kubernetes namespace Build containers will be created in.
 Defaults to build-$NAMESPACE
   
-##Persistence
+## Persistence
 In order to persist the Jenkins data simply mount a persistent storage to 
 /var/jenkins in the jenkins container, as done in the full example below. 
 
-##Full Example
+## Full Example
 	apiVersion: apps/v1
 	kind: Deployment
 	metadata:
