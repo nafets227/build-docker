@@ -12,7 +12,7 @@ function build_local () {
 }
 
 # pull Base Image to be sure we use the latest version
-docker pull archlinux/base:latest
+docker pull archlinux/archlinux:latest
 
 if [ $# -eq 0 ] ; then
 	for f in $(ls); do
