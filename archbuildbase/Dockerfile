@@ -1,6 +1,6 @@
 FROM archlinux/archlinux
 
-MAINTAINER Stefan Schallenberg aka nafets227 <infos@nafets.de>
+LABEL Maintainer="Stefan Schallenberg aka nafets227 <infos@nafets.de>"
 LABEL Description="Build Base container for Arch Linux Builds in Jenkins"
 
 EXPOSE 22
