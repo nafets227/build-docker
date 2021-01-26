@@ -13,7 +13,7 @@ Include = /etc/pacman.d/mirrorlist\n\
     pacman -Sy
 
 RUN \
-    pacman -S --needed --noconfirm base-devel intltool && \
+    pacman -Suy --needed --noconfirm base-devel intltool && \
     rm -rf /var/cache/pacman/pkg/* && \
     rm -rf /usr/share/man/* && \
     rm -rf /tmp/* && \
