@@ -1,4 +1,9 @@
-FROM archlinux/archlinux
+# Workaround Bug in current archlinux that prevents pacman -Sy
+# from working, erroneously reporting no access to /var/lib/pacman
+# as of 7.2.2021
+
+#FROM archlinux/archlinux:base-devel
+FROM archlinux/archlinux:base-devel-20210131.0.14634
 
 LABEL Maintainer="Stefan Schallenberg aka nafets227 <infos@nafets.de>"
 LABEL Description="Build Base container for Arch Linux Builds in Jenkins"
@@ -9,6 +14,10 @@ RUN \
     groupadd -r jenkins -g 900 && \
     useradd -r -d /home/jenkins -u 900 -m -g jenkins jenkins && \
     printf "jenkins\njenkins\n" | passwd jenkins
+
+# Workaround
+RUN \
+    echo "IgnorePkg = glibc glib2" >>/etc/pacman.conf
 
 RUN \
     pacman -Suy --noconfirm && \
