@@ -1,12 +1,4 @@
-# Workaround Bug in current archlinux that prevents pacman -Sy
-# from working, erroneously reporting no access to /var/lib/pacman
-# as of 7.2.2021
-
-#FROM archlinux/archlinux:base-devel as base-amd64
-FROM archlinux/archlinux:base-devel-20210131.0.14634 AS base-amd64
-# Workaround
-RUN \
-    echo "IgnorePkg = glibc glib2" >>/etc/pacman.conf
+FROM archlinux/archlinux:base-devel as base-amd64
 
 FROM agners/archlinuxarm-arm32v7 as base-arm
 RUN \
@@ -45,7 +37,7 @@ RUN \
       /var/lib/pacman/sync/* \
       /README \
       /etc/pacman.d/mirrorlist.pacnew    
-    
+
 COPY jenkins-slave /usr/local/bin
 RUN \
     chown root:users /usr/local/bin/jenkins-slave && \
