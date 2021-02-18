@@ -1,3 +1,4 @@
+ARG TARGETARCH
 FROM archlinux/archlinux:base-devel as base-amd64
 
 FROM agners/archlinuxarm-arm32v7 as base-arm
