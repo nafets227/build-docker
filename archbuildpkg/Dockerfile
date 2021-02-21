@@ -4,12 +4,15 @@ FROM nafets227/archbuildbase:$DOCKER_TAG
 LABEL Maintainer="Stefan Schallenberg aka nafets227 <infos@nafets.de>"
 LABEL Description="Build container for Arch Packages in Jenkins"
 
-RUN printf '\n\
+RUN \
+    if [ "$HOSTARCH" == "x86_64" ] ; then \
+        printf '\n\
 [multilib]\n\
 Include = /etc/pacman.d/mirrorlist\n\
 \n\
 ' \
->> /etc/pacman.conf && \ 
+            >> /etc/pacman.conf || exit 1 ; \
+    fi && \
     pacman -Sy
 
 RUN \
